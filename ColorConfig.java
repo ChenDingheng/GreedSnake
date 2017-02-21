@@ -30,11 +30,11 @@ public class ColorConfig extends JPanel{
         cancelButton=new JButton("Cancel");
         cancelButton.addActionListener(new ActionHandler());
         add(commitButton);
-        add(CancelButton);
+        add(cancelButton);
         setVisible(true);
     }
 
-    private class ActionHandler implements ActionLisener{
+    private class ActionHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
             for(int i=0;i<color.length;i++){
                 if(e.getSource()==panel[i]){
@@ -46,7 +46,7 @@ public class ColorConfig extends JPanel{
             }
             if(e.getSource()==commitButton){
                 color[0]=(color[0]==null?ColorGroup.COLOR_BACK:color[0]);
-                color[1]=(color[1]==null?ColorGroup.COLOP_SNAKE:color[1]);
+                color[1]=(color[1]==null?ColorGroup.COLOR_SNAKE:color[1]);
                 color[2]=(color[2]==null?ColorGroup.COLOR_BEAN:color[2]);
                 color[3]=(color[3]==null?ColorGroup.COLOR_EATEDBEAN:color[3]);
                 ColorGroup.setCOLOR_BACK(color[0]);
