@@ -2,12 +2,12 @@ import java.awt.*;
 
 /**
  * Created by dell on 2017/2/21.
+ * checked ok!
  */
-class ColorGroup {
+public class ColorGroup {
     static Color COLOR_BACK= Color.WHITE;
     static Color COLOR_SNAKE=new Color(43,110,187);
     static Color COLOR_BEAN=Color.RED;
-    static Color COLOR_EATEDBEAN=Color.CYAN;
 
     static void setCOLOR_BACK(Color temp){
         COLOR_BACK=temp;
@@ -21,7 +21,4 @@ class ColorGroup {
         COLOR_BEAN=temp;
     }
 
-    static void setCOLOR_EATEDBEAN(Color temp){
-        COLOR_EATEDBEAN=temp;
-    }
 }

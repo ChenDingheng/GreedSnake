@@ -3,15 +3,12 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 /**
  * Created by dell on 2017/2/20.
  */
-public class ControlPanel extends JPanel{
+public class ControlPanel extends JPanel implements ActionListener, ChangeListener, KeyListener{
     static final int MARK_MIN=0;
     static final int MARK_MAX=10;
     static final int MARK_INIT=0;
@@ -23,6 +20,8 @@ public class ControlPanel extends JPanel{
     private Timer timer;
     private GreedSnake game;
     private EtchedBorder border=new EtchedBorder(EtchedBorder.RAISED, Color.white,Color.lightGray);
+
+    private Direction direction=Direction.LEFT;
 
     public ControlPanel(final GreedSnake game){
         this.game=game;
@@ -55,50 +54,44 @@ public class ControlPanel extends JPanel{
         add(infoPanel);
         add(buttonPanel);
 
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                game.playGame();
-            }
-        });
+        playButton.addActionListener(this);
+        pauseButton.addActionListener(this);
+        stopButton.addActionListener(this);
 
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                if(pauseButton.getText().equals("Pause"))
-                    game.pauseGame();
-                else
-                    game.resumeGame();
-            }
-        });
+        slider.addChangeListener(this);
 
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                game.stopGame();
-            }
-        });
-
-        slider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent event) {
-                JSlider source=(JSlider)event.getSource();
-                if(source.getValueIsAdjusting()){
-                    game.setLevel(source.getValue());
-                }
-            }
-        });
-
+        //timer=new Timer(500, this);
         timer=new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 scoreField.setText(""+game.getScore());
             }
         });
-
         timer.start();
-        addKeyListener(new ControlKeyListener());
+        pauseButton.addKeyListener(this);
     }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        JSlider source=(JSlider)e.getSource();
+        if(source.getValueIsAdjusting()){
+            game.setLevel(source.getValue());
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getActionCommand().equals("Start"))
+            game.playGame();
+        else if(e.getActionCommand().equals("Pause"))
+            game.pauseGame();
+        else if(e.getActionCommand().equals("Continue"))
+            game.resumeGame();
+        else if(e.getActionCommand().equals("Stop"))
+            game.stopGame();
+    }
+
+
 
     public void setPlayButtonEnable(boolean enable){
         playButton.setEnabled(enable);
@@ -115,39 +108,53 @@ public class ControlPanel extends JPanel{
         game.setScore(0);
     }
 
-    private class ControlKeyListener extends KeyAdapter {
-        private Direction direction=Direction.LEFT;
-        public void keyPressed(KeyEvent ke){
-            if(!game.isPlaying())
-                return;
-            switch(ke.getKeyCode()){
-                case KeyEvent.VK_DOWN:
-                    if(direction!=Direction.DOWN && direction!=Direction.UP){
-                        game.changeDirection(Direction.DOWN);
-                        direction=Direction.DOWN;
-                    }
-                    break;
-                case KeyEvent.VK_LEFT:
-                    if(direction!=Direction.LEFT && direction!=Direction.RIGHT){
-                        game.changeDirection(Direction.LEFT);
-                        direction=Direction.LEFT;
-                    }
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if(direction!=Direction.RIGHT && direction!=Direction.LEFT){
-                        game.changeDirection(Direction.RIGHT);
-                        direction=Direction.RIGHT;
-                    }
-                    break;
-                case KeyEvent.VK_UP:
-                    if(direction!=Direction.UP && direction!=Direction.DOWN){
-                        game.changeDirection(Direction.UP);
-                        direction=Direction.UP;
-                    }
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if(!game.isPlaying())
+            return;
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_DOWN:
+                if(direction!=Direction.DOWN && direction!=Direction.UP){
+                    game.changeDirection(Direction.DOWN);
+                    direction=Direction.DOWN;
+                    System.out.println("Down");
+                }
+                break;
+            case KeyEvent.VK_LEFT:
+                if(direction!=Direction.LEFT && direction!=Direction.RIGHT){
+                    game.changeDirection(Direction.LEFT);
+                    direction=Direction.LEFT;
+                    System.out.println("Left");
+                }
+                break;
+            case KeyEvent.VK_RIGHT:
+                if(direction!=Direction.RIGHT && direction!=Direction.LEFT){
+                    game.changeDirection(Direction.RIGHT);
+                    direction=Direction.RIGHT;
+                    System.out.println("Right");
+                }
+                break;
+            case KeyEvent.VK_UP:
+                if(direction!=Direction.UP && direction!=Direction.DOWN){
+                    game.changeDirection(Direction.UP);
+                    direction=Direction.UP;
+                    System.out.println("Up");
+                }
+                break;
+            default:
+                break;
+
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

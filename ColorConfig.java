@@ -4,68 +4,65 @@ import java.awt.event.*;
 
 /**
  * Created by dell on 2017/2/20.
+ * modified ok!
  */
-public class ColorConfig extends JPanel{
+public class ColorConfig extends JPanel implements ActionListener{
+
+    private GreedSnake applet;
+    private JButton[] colorPanelButton=new JButton[3];
+    private JButton commitButton,cancelButton;
+    Color[] color=new Color[3];
+
+
     public ColorConfig(GreedSnake applet){
         this.applet=applet;
         setLayout(new GridLayout(6,1,0,1));
-        panel[0]=new JButton("Color of Background");
-        panel[1]=new JButton("Color of GreedSnake");
-        panel[2]=new JButton("Color of Food");
-        panel[3]=new JButton("Color of EatedFood");
+        colorPanelButton[0]=new JButton("Color of Background");
+        colorPanelButton[1]=new JButton("Color of GreedSnake");
+        colorPanelButton[2]=new JButton("Color of Food");
 
-        for(int i=0;i<panel.length;i++){
-            panel[i].setLayout(new GridLayout(2,1));
-            panel[i].addActionListener(new ActionHandler());
-            add(panel[i]);
+        for(int i=0;i<colorPanelButton.length;i++){
+            colorPanelButton[i].setLayout(new GridLayout(2,1));
+            colorPanelButton[i].addActionListener(this);
+            add(colorPanelButton[i]);
         }
 
-        panel[0].setBackground(ColorGroup.COLOR_BACK);
-        panel[1].setBackground(ColorGroup.COLOR_SNAKE);
-        panel[2].setBackground(ColorGroup.COLOR_BEAN);
-        panel[3].setBackground(ColorGroup.COLOR_EATEDBEAN);
+        colorPanelButton[0].setBackground(ColorGroup.COLOR_BACK);
+        colorPanelButton[1].setBackground(ColorGroup.COLOR_SNAKE);
+        colorPanelButton[2].setBackground(ColorGroup.COLOR_BEAN);
 
         commitButton=new JButton("Confirm");
-        commitButton.addActionListener(new ActionHandler());
+        commitButton.addActionListener(this);
         cancelButton=new JButton("Cancel");
-        cancelButton.addActionListener(new ActionHandler());
+        cancelButton.addActionListener(this);
         add(commitButton);
         add(cancelButton);
         setVisible(true);
     }
 
-    private class ActionHandler implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            for(int i=0;i<color.length;i++){
-                if(e.getSource()==panel[i]){
-                    color[i]= JColorChooser.showDialog(ColorConfig.this,"Choose Color",Color.WHITE);
-                    if(color[i]!=null){
-                        panel[i].setBackground(color[i]);
-                    }
+    @Override
+    public void actionPerformed(ActionEvent e){
+        for(int i=0;i<color.length;i++){
+            if(e.getSource()==colorPanelButton[i]){
+                color[i]= JColorChooser.showDialog(ColorConfig.this,"Choose Color",Color.WHITE);
+                if(color[i]!=null){
+                    colorPanelButton[i].setBackground(color[i]);
                 }
             }
-            if(e.getSource()==commitButton){
-                color[0]=(color[0]==null?ColorGroup.COLOR_BACK:color[0]);
-                color[1]=(color[1]==null?ColorGroup.COLOR_SNAKE:color[1]);
-                color[2]=(color[2]==null?ColorGroup.COLOR_BEAN:color[2]);
-                color[3]=(color[3]==null?ColorGroup.COLOR_EATEDBEAN:color[3]);
-                ColorGroup.setCOLOR_BACK(color[0]);
-                ColorGroup.setCOLOR_SNAKE(color[1]);
-                ColorGroup.setCOLOR_BEAN(color[2]);
-                ColorGroup.setCOLOR_EATEDBEAN(color[3]);
-                GameCanvas.getCanvasInstance().repaint();
-            }
-            else if(e.getSource()==cancelButton){
-                panel[0].setBackground(ColorGroup.COLOR_BACK);
-                panel[1].setBackground(ColorGroup.COLOR_SNAKE);
-                panel[2].setBackground(ColorGroup.COLOR_BEAN);
-                panel[3].setBackground(ColorGroup.COLOR_EATEDBEAN);
-            }
+        }
+        if(e.getSource()==commitButton){
+            color[0]=(color[0]==null?ColorGroup.COLOR_BACK:color[0]);
+            color[1]=(color[1]==null?ColorGroup.COLOR_SNAKE:color[1]);
+            color[2]=(color[2]==null?ColorGroup.COLOR_BEAN:color[4]);
+            ColorGroup.setCOLOR_BACK(color[0]);
+            ColorGroup.setCOLOR_SNAKE(color[1]);
+            ColorGroup.setCOLOR_BEAN(color[2]);
+            GameCanvas.getCanvasInstance().repaint();
+        }
+        else if(e.getSource()==cancelButton){
+            colorPanelButton[0].setBackground(ColorGroup.COLOR_BACK);
+            colorPanelButton[1].setBackground(ColorGroup.COLOR_SNAKE);
+            colorPanelButton[2].setBackground(ColorGroup.COLOR_BEAN);
         }
     }
-
-    private GreedSnake applet;
-    private JButton[] panel=new JButton[4];
-    private JButton commitButton,cancelButton;
-    Color[] color=new Color[4];
 }

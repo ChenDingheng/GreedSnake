@@ -3,10 +3,12 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by dell on 2017/2/20.
  */
-public class SnakeBody extends Thread{
+public class SnakeBody implements Runnable{
     private LinkedList<SnakeNode> snakeList;
     private GreedSnake game;
     private GameCanvas canvas;
@@ -17,8 +19,7 @@ public class SnakeBody extends Thread{
     private int timeInterval=200;
     private int curLevelScore;
     private SnakeNode food;
-    private SnakeNode eatedfood;
-    public Direction direction=Direction.LEFT;
+    private Direction direction=Direction.UP;
 
     public SnakeBody(final GreedSnake game,int iniSnakeBodyLength){
         this.game=game;
@@ -82,14 +83,8 @@ public class SnakeBody extends Thread{
             default:break;
         }
 
-        if(x<0 || x>=canvas.getCols()-1 || y<0 || y>=canvas.getRows()){
-            y=(y+canvas.getCols())%canvas.getCols();
-            x=(canvas.getRows()+x)%canvas.getRows();
-            for(int i=0;i<snakeList.size();i++){
-                SnakeNode temp=(SnakeNode)snakeList.get(i);
-                temp.setCol((canvas.getCols()+temp.getCol())%canvas.getCols());
-                temp.setRow((canvas.getRows()+temp.getRow())%canvas.getRows());
-            }
+        if(x<0 || x>canvas.getCols()-1 || y<0 || y>canvas.getRows()-1){
+            return false;
         }
 
         if(x==food.getRow() && y==food.getCol()){
@@ -102,9 +97,9 @@ public class SnakeBody extends Thread{
             game.setScore(score);
             curLevelScore+=SCORES;
             snakeList.addFirst(new SnakeNode(x,y));
-            eatedfood=new SnakeNode(x,y);
             createFood();
-            canvas.setColorFlag(eatedfood.getRow(),eatedfood.getCol(),IsWhat.isEated);
+            canvas.setColorFlag(x,y,IsWhat.isSnake);
+            canvas.repaint();
         }
         else{
             snakeHead=new SnakeNode(x,y);
@@ -113,8 +108,7 @@ public class SnakeBody extends Thread{
             SnakeNode snakeTail=(SnakeNode)snakeList.getLast();
             snakeList.removeLast();
             canvas.setColorFlag(snakeTail.getRow(),snakeTail.getCol(),IsWhat.isBackground);
-            if(snakeList.contains(eatedfood))
-                canvas.setColorFlag(eatedfood.getRow(),eatedfood.getCol(),IsWhat.isEated);
+            canvas.repaint();
         }
         canvas.repaint();
         SnakeNode head=(SnakeNode)snakeList.getFirst();
@@ -125,11 +119,13 @@ public class SnakeBody extends Thread{
         return true;
     }
 
+    @Override
     public void run(){
         while(running){
             try{
                 sleep(timeInterval-game.getLevel()*PER_LEVEL_SPEED_UP);
-            }catch(InterruptedException e){
+            }
+            catch(InterruptedException e){
                 e.printStackTrace();
             }
             if(!pause){
@@ -139,5 +135,6 @@ public class SnakeBody extends Thread{
                 }
             }
         }
+        //Thread.yield();
     }
 }

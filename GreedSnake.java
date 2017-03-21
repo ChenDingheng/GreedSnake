@@ -8,7 +8,7 @@ public class GreedSnake extends JApplet {
     private SnakeBody snakeBody;
     private GameCanvas canvas;
     private ControlPanel controlPanel;
-    private boolean playing=false,first=true;
+    private boolean playing=false;
     private int level,score;
 
     public void init(){
@@ -22,12 +22,13 @@ public class GreedSnake extends JApplet {
         int x=(srcSize.width-getSize().width)/2;
         int y=(srcSize.height-getSize().height)/2;
         setLocation(x,y);
-        snakeBody=new SnakeBody(this,3);
+        //snakeBody=new SnakeBody(this,3);
         canvas=GameCanvas.getCanvasInstance();
         controlPanel=new ControlPanel(this);
         Container container=getContentPane();
         container.add(canvas,BorderLayout.CENTER);
         container.add(controlPanel,BorderLayout.EAST);
+        //controlPanel.addKeyListener(controlPanel);
         setVisible(true);
     }
 
@@ -48,12 +49,15 @@ public class GreedSnake extends JApplet {
     }
 
     public void playGame(){
-        if(!first){
-            snakeBody=new SnakeBody(this,3);
-            first=false;
-        }
+        //Thread snakeThread=new Thread(snakeBody);
+        //if(!first){
+        snakeBody=new SnakeBody(this,3);
+            //first=false;
+        //}
         controlPanel.setPlayButtonEnable(false);
-        snakeBody.start();
+        new Thread(snakeBody).start();
+        //snakeBody.run();
+        //Thread.yield();
         playing=true;
     }
 

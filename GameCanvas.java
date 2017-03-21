@@ -7,7 +7,7 @@ import java.awt.*;
 public class GameCanvas extends JPanel {
     private int rows=20,cols=20;
     private int boxWidth,boxHeight;
-    private IsWhat [][]colorFlags;
+    private IsWhat[][] colorFlags;
     private static GameCanvas instance=null;
 
     private GameCanvas(){
@@ -41,7 +41,7 @@ public class GameCanvas extends JPanel {
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        windowresise();
+        windowReSize();
         for(int i=0;i<colorFlags.length;i++)
             for(int j=0;j<colorFlags[i].length;j++){
             switch(colorFlags[i][j]){
@@ -57,10 +57,6 @@ public class GameCanvas extends JPanel {
                     g.setColor(ColorGroup.COLOR_BACK);
                     g.fill3DRect(j*boxWidth,i*boxHeight,boxWidth,boxHeight,true);
                     break;
-                case isEated:
-                    g.setColor(ColorGroup.COLOR_EATEDBEAN);
-                    g.fill3DRect(j*boxWidth,i*boxHeight,boxWidth,boxHeight,true);
-                    break;
                 default:
                     break;
             }
@@ -74,7 +70,7 @@ public class GameCanvas extends JPanel {
         repaint();
     }
 
-    public void windowresise(){
+    public void windowReSize(){
         boxWidth=getSize().width/cols;
         boxHeight=getSize().height/rows;
     }

@@ -5,7 +5,9 @@ import java.awt.*;
  */
 public class SnakeNode {
     private int row,col;
-    private Color color;
+    private Color headColor;
+    private Color tailColor;
+    private Color bodyColor;
 
     public SnakeNode(int row, int col) {
         this.row = row;
